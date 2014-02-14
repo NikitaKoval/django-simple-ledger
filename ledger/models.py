@@ -3,12 +3,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.db import models
 from ledger.transactions import TRANSACTION_DEBIT, TRANSACTION_DEPOSIT, TRANSACTION_CREDIT, TRANSACTION_WITHDRAW
-
-TRANSACTION_TYPES = ((TRANSACTION_DEBIT, _("Debit")),
+from django.conf import settings
+BASE_TRANSACTION_TYPES = ((TRANSACTION_DEBIT, _("Debit")),
                      (TRANSACTION_DEPOSIT, _("Deposit")),
                      (TRANSACTION_CREDIT, _("Credit")),
                      (TRANSACTION_WITHDRAW, _("Withdraw")))
 
+TRANSACTION_TYPES = getattr(settings, 'TRANSACTION_TYPES', BASE_TRANSACTION_TYPES)
 
 class Transaction(models.Model):
     agent_from_content_type = models.ForeignKey(ContentType, related_name='agent_from_type', verbose_name=_('From object type'))
